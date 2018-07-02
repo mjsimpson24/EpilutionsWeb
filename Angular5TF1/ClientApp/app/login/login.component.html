@@ -1,0 +1,8 @@
+﻿<h3>Login</h3>
+<div *ngIf="!isLoggedIn">
+    <button (click)="login()">Login with my AAD account</button>
+</div>
+
+<div *ngIf="isLoggedIn">
+    <button (click)="logout()">Logout</button>
+</div>

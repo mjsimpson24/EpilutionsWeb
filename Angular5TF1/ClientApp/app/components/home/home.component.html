@@ -1,0 +1,7 @@
+<h3>Home Component</h3>
+<h2>Welcome {{adalService.userInfo.userName}}!</h2>
+
+<div *ngIf="isLoggedIn">
+    <button (click)="logout()">Logout</button>
+</div>
+<br>

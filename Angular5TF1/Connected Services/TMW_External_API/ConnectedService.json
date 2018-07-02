@@ -1,0 +1,27 @@
+﻿{
+  "ProviderId": "Microsoft.VisualStudio.ConnectedService.Wcf",
+  "Version": "15.0.20119.1312",
+  "GettingStartedDocument": {
+    "Uri": "https://go.microsoft.com/fwlink/?linkid=858517"
+  },
+  "ExtendedData": {
+    "Uri": "http://www.alstracking.com/TMWSystemsLinkExternal_TEST/ExternalAPIWCFServices.svc",
+    "Namespace": "TMW_External_API",
+    "SelectedAccessLevelForGeneratedClass": "Public",
+    "GenerateMessageContract": true,
+    "ReuseTypesinReferencedAssemblies": false,
+    "ReuseTypesinAllReferencedAssemblies": true,
+    "CollectionTypeReference": {
+      "Item1": "System.Collections.Generic.List`1",
+      "Item2": "System.Collections.dll"
+    },
+    "DictionaryCollectionTypeReference": {
+      "Item1": "System.Collections.Generic.Dictionary`2",
+      "Item2": "System.Collections.dll"
+    },
+    "CheckedReferencedAssemblies": [],
+    "InstanceId": null,
+    "Name": "TMW_External_API",
+    "Metadata": {}
+  }
+}

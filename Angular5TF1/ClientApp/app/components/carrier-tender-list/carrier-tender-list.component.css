@@ -1,0 +1,36 @@
+﻿body {
+}
+
+div .order-card {
+    margin: 15px;
+    padding: 10px;
+    border-radius: 10px;
+    border: 2px solid #000000;
+    border-top: 25px solid #000000;
+}
+
+div .red-card {
+    border: 2px solid #e60000;
+    border-top: 25px solid #e60000;
+}
+
+div .green-card {
+    border: 2px solid #009900;
+    border-top: 25px solid #009900;
+}
+
+div .yellow-card {
+    border: 2px solid #ffcc00;
+    border-top: 25px solid #ffcc00;
+}
+
+h4 {
+    color: white;
+}
+
+.epi-button {
+    color: #FFFFFF;
+    background-color: #002E5E;
+    margin: 5px;
+    padding: 5px;
+}

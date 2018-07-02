@@ -1,0 +1,64 @@
+﻿<div>
+    <p *ngIf="!(allOrders.length > 0)"><em>Loading Data...</em></p>
+</div>
+
+
+<div class="col-lg-12" *ngIf="allOrders.length > 0">
+    <h3>Filters</h3>
+    <div class="col-lg-2">
+        <mat-form-field>
+            <mat-select placeholder="Origin State" (selectionChange)="originStateChange($event.value)" [(ngModel)]="originFilter">
+                <mat-option *ngFor="let s of states" [value]="s">{{s}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div class="col-lg-2">
+        <mat-form-field>
+            <mat-select placeholder="Destination State" (selectionChange)="destinationStateChange($event.value)" [(ngModel)]="destinationFilter">
+                <mat-option *ngFor="let s of states" [value]="s">{{s}}</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div class="col-lg-2">
+        <mat-form-field>
+            <input matInput [matDatepicker]="picker" placeholder="Pickup Date" (dateChange)="filterDateChange($event.value)" [(ngModel)]="filterDate">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+    </div>
+    <div class="col-lg-2">
+        <button class="epi-button" (click)="clearFilters()">Clear Filters</button>
+    </div>
+</div>
+
+
+
+
+<div class="col-lg-12">
+    <div *ngFor="let order of openOrders" class="col-lg-3 order-card" (click)="openTenderPage(order.encryptedId)"
+         [ngClass]="{'red-card': !order.tenderData.accepted, 
+                     'green-card': order.tenderData.accepted && order.driver1, 
+                     'yellow-card': order.tenderData.accepted && !order.driver1}"
+         style="cursor: pointer;">
+        <div>
+            <h4 *ngIf="order.tenderData.accepted && order.driver1" style="margin-top: -30px; margin-left: 10px;">Completed</h4>
+            <h4 *ngIf="order.tenderData.accepted && !order.driver1" style="margin-top: -30px; margin-left: 10px;">Missing Information</h4>
+            <h4 *ngIf="!order.tenderData.accepted" style="margin-top: -30px; margin-left: 10px;">Acceptance Required</h4>
+            <p>
+                <label>Order #: </label> {{order.orderNumber}}
+            </p>
+            <p>
+                <label>Pickup Date:</label> {{order.pickupDate | date:'short'}}
+            </p>
+            <p>
+                <label>Origin: </label> {{order.originCity.cityStateZip}}
+            </p>
+            <p>
+                <label>Destination: </label> {{order.destinationCity.cityStateZip}}
+            </p>
+            <p>
+                <label>Load Type: </label> {{order.loadType}}
+            </p>
+        </div>        
+    </div>
+</div>

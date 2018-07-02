@@ -1,0 +1,301 @@
+﻿<p *ngIf="!tenderData.orderNumber"><em>Loading Data...</em></p>
+
+<div *ngIf="tenderData.orderNumber">
+    <h3>{{tenderData.carrierName}} - Order #{{tenderData.orderNumber}}</h3>
+
+    <p>Please enter all pertitent information</p>
+    <button class="epi-button" (click)="print(viewer1)" *ngIf="tenderData.orderNumber && !printVisible">Print</button>
+    <button class="epi-button" (click)="hidePrint()" *ngIf="tenderData.orderNumber && printVisible">Hide Print</button>
+</div>
+
+<div *ngIf="!printVisible">
+    <div class="col-lg-3" style="margin: 5px;">
+        <div class="form-group" *ngIf="tenderData.orderNumber">
+            <form class="example-form">
+                <p>
+                    <label style="display: block;">In-route From:</label>
+                    <mat-form-field class="example-full-width">
+                        <input matInput placeholder="Enter a City" aria-label="City" [matAutocomplete]="auto" [formControl]="cityControl" required
+                               [attr.disabled]="bmtIsDisabled ? 'true' : null">
+                        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+                            <mat-option *ngFor="let city of filteredCities | async" [value]="city">
+                                {{ city.cityStateZip }}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </mat-form-field>
+                </p>
+            </form>
+            <p>
+                <label style="display: block;">In-route Arrival:</label>
+                <mat-form-field>
+                    <input matInput [matDatepicker]="picker" placeholder="Choose a date" [(ngModel)]="stopData.estimatedArrivalDate" required>
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+                <select [(ngModel)]="bmtArrivalHour">
+                    <option>0</option>
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                    <option>6</option>
+                    <option>7</option>
+                    <option>8</option>
+                    <option>9</option>
+                    <option>10</option>
+                    <option>11</option>
+                    <option>12</option>
+                    <option>13</option>
+                    <option>14</option>
+                    <option>15</option>
+                    <option>16</option>
+                    <option>17</option>
+                    <option>18</option>
+                    <option>19</option>
+                    <option>20</option>
+                    <option>21</option>
+                    <option>22</option>
+                    <option>23</option>
+                </select>
+                <select [(ngModel)]="bmtArrivalMinute">
+                    <option>0</option>
+                    <option>5</option>
+                    <option>10</option>
+                    <option>15</option>
+                    <option>20</option>
+                    <option>25</option>
+                    <option>30</option>
+                    <option>35</option>
+                    <option>40</option>
+                    <option>45</option>
+                    <option>50</option>
+                    <option>55</option>
+                </select>
+            </p>
+            <p>
+                <label>Driver 1 Name:</label>
+                <input class="form-control input-sm" type="text" [(ngModel)]="tenderData.driver1Name" />
+            </p>
+            <p>
+                <label>Driver 1 Cell:</label>
+                <input class="form-control input-sm" type="text" [(ngModel)]="tenderData.driver1Cell" />
+            </p>
+            <p>
+                <label>Driver 2 Name:</label>
+                <input class="form-control input-sm" type="text" [(ngModel)]="tenderData.driver2Name" />
+            </p>
+            <p>
+                <label>Driver 2 Cell:</label>
+                <input class="form-control input-sm" type="text" [(ngModel)]="tenderData.driver2Cell" />
+            </p>
+            <p>
+                <label>Truck Number:</label>
+                <input class="form-control input-sm" type="text" [(ngModel)]="tenderData.truckNumber" />
+            </p>
+            <p>
+                <label>Trailer Number:</label>
+                <input class="form-control input-sm" type="text" [(ngModel)]="tenderData.trailerNumber" />
+            </p>
+            <div style="margin: 5px;" *ngIf="!tenderData.accepted">
+                <button class="epi-button" (click)="acceptOffer()" [disabled]="isSaving">Accept</button>
+                <button class="epi-button" (click)="declineOffer()" [disabled]="isSaving">Decline</button>
+            </div>
+            <div style="margin: 5px;" *ngIf="tenderData.accepted">
+                <button class="epi-button" (click)="saveData()" [disabled]="isSaving">Update</button>
+            </div>
+            <p>
+                {{saveMessage}}
+            </p>
+            <mat-spinner *ngIf="isSaving"></mat-spinner>
+        </div>
+    </div>
+
+    <div class="col-lg-8">
+        <div *ngIf="tenderData.orderNumber">
+            <div class="col-lg-12" *ngIf="tenderData.carrierRepName">
+                <div class="col-lg-3">
+                    <label>Carrier Rep: </label>{{tenderData.carrierRepName}}
+                </div>
+                <div class="col-lg-3">
+                    <label>Phone: </label>{{tenderData.carrierRepPhone}}
+                </div>
+                <div class="col-lg-3">
+                    <label>Cell: </label>{{tenderData.carrierRepCell}}
+                </div>
+                <div class="col-lg-3">
+                    <label>Fax: </label>{{tenderData.carrierRepFax}}
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <div class="col-lg-3">
+                    <label>Trailer Type: </label>{{tenderData.trailerType}}
+                </div>
+            </div>
+        </div>
+        <div *ngFor="let s of stopData.stops" class="col-lg-12 stopData">
+            <div class="col-lg-4">
+                <label>STOP #:</label> {{s.stopSequence}}  -  {{s.eventCode}}
+                <p *ngIf="hasBmt">
+                    {{s.stopCustomer}}<br />
+                    {{s.address}}<br />
+                    {{s.cityStateZip}}
+                </p>
+                <p>
+                    Instructions: {{s.comment}}
+                </p>
+            </div>
+            <div class="col-lg-4">
+                <label>EARLIEST:</label> {{s.earliestDate | date:'short'}}<br />
+                <label>LATEST:</label> {{s.latestDate | date:'short'}}<br />
+                <label>WEIGHT:</label> {{s.weight}} {{s.weightUnit}}<br />
+                <label>PIECES:</label> {{s.pieces}} {{s.piecesUnit}}<br />
+            </div>
+            <div class="col-lg-4">
+                <p>Order #: {{s.orderNumber}}</p>
+            </div>
+        </div>
+        <div *ngIf="tenderData.orderNumber">
+            <div class="col-lg-12">
+                <div class="col-lg-4">
+                    <p>
+                        <label>Total Mileage: </label> {{tenderData.miles}}
+                    </p>
+                    <div>
+                        <label>Pay Summary:</label>
+                        <div style="margin-left: 20px;">
+                            <div style="display: block;">
+                                <label style="width: 150px;">FLAT RATE:</label>
+                                {{tenderData.linehaulCharge | currency}}
+                            </div>
+                            <div style="display: inline-block;">
+                                <label style="width: 150px;">OTHER:</label>
+                                {{tenderData.otherCharge | currency}}
+                            </div>
+                            <div style="display: block;">
+                                <label style="width: 150px;">TOTAL:</label>
+                                {{tenderData.linehaulCharge | currency}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-8">
+                    <label>Remarks:</label>{{tenderData.comment}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div id="print-section" class="col-lg-12">
+    <tr-viewer #viewer1 id="report-viewer" [containerStyle]="viewerContainerStyle"
+               [serviceUrl]="reportUrl"
+               [reportSource]="{
+                        report: 'RateConfirmation.trdp',
+                        parameters: { QuoteOrderLineId: 0 }
+                    }"
+               [viewMode]="'PRINT_PREVIEW'"
+               [scaleMode]="'SPECIFIC'"
+               [error]="printError"
+               [persistSession]="false"
+               [scale]="1.0">
+    </tr-viewer>
+    <!--<h1 style="text-align: center;">ALS</h1>
+    <p style="text-align: center;">3517 Scheele Dr, Jackson MI, MI 49202</p>
+    <h3>{{tenderData.carrierName}} - Order #{{tenderData.orderNumber}}</h3>
+    <div class="col-lg-8" style="margin: 10px;">
+        <p>
+            <label>Driver 1 Name: </label>{{tenderData.driver1Name}}
+        </p>
+        <p>
+            <label>Driver 1 Cell: </label>{{tenderData.driver1Cell}}
+        </p>
+        <p>
+            <label>Driver 2 Name: </label>{{tenderData.driver2Name}}
+        </p>
+        <p>
+            <label>Driver 2 Cell: </label>{{tenderData.driver2Cell}}
+        </p>
+        <p>
+            <label>Truck Number: </label>{{tenderData.truckNumber}}
+        </p>
+        <p>
+            <label>Trailer Number: </label>{{tenderData.trailerNumber}}
+        </p>
+        <p>
+            <label>Trailer Type: </label>{{tenderData.trailerType}}
+        </p>
+    </div>
+    <div class="col-lg-12" style="margin: 10px;">
+        <div class="col-lg-12" *ngIf="tenderData.carrierRepName">
+            <div class="col-lg-3">
+                <label>Carrier Rep: </label>{{tenderData.carrierRepName}}
+            </div>
+            <div class="col-lg-3">
+                <label>Phone: </label>{{tenderData.carrierRepPhone}}
+            </div>
+            <div class="col-lg-3">
+                <label>Cell: </label>{{tenderData.carrierRepCell}}
+            </div>
+            <div class="col-lg-3">
+                <label>Fax: </label>{{tenderData.carrierRepFax}}
+            </div>
+        </div>
+    </div>
+    <div *ngFor="let s of stopData.stops" class="col-lg-12 stopData" style="border: 1px solid #000000">
+        <div class="col-lg-4">
+            <label>STOP #:</label> {{s.stopSequence}}  -  {{s.eventCode}}
+            <p *ngIf="hasBmt">
+                {{s.stopCustomer}}<br />
+                {{s.address}}<br />
+                {{s.cityStateZip}}
+            </p>
+            <p>
+                Instructions: {{s.comment}}
+            </p>
+        </div>
+        <div class="col-lg-4">
+            <label>EARLIEST:</label> {{s.earliestDate | date:'short'}}<br />
+            <label>LATEST:</label> {{s.latestDate | date:'short'}}<br />
+            <label>WEIGHT:</label> {{s.weight}} {{s.weightUnit}}<br />
+            <label>PIECES:</label> {{s.pieces}} {{s.piecesUnit}}<br />
+        </div>
+        <div class="col-lg-4">
+            <p>Order #: {{s.orderNumber}}</p>
+        </div>
+    </div>
+    <div>
+        <div class="col-lg-12">
+            <div class="col-lg-4">
+                <p>
+                    <label>Total Mileage: </label>{{tenderData.miles}}
+                </p>
+                <div>
+                    <label>Pay Summary:</label>
+                    <div style="margin-left: 20px;">
+                        <div style="display: block;">
+                            <label style="width: 150px;">FLAT RATE:</label>
+                            {{tenderData.linehaulCharge | currency}}
+                        </div>
+                        <div style="display: inline-block;">
+                            <label style="width: 150px;">OTHER:</label>
+                            {{tenderData.otherCharge | currency}}
+                        </div>
+                        <div style="display: block;">
+                            <label style="width: 150px;">TOTAL:</label>
+                            {{tenderData.linehaulCharge | currency}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12" style="margin: 25px;">
+        <p><label>Remarks:</label>{{tenderData.comment}}</p>
+    </div>
+    <div class="col-lg-12" style="margin: 25px;">
+        <p><label>Disclaimer: </label>{{tenderData.disclaimer}}</p>
+    </div>-->
+</div>
